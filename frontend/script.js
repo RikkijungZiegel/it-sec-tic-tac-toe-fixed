@@ -91,49 +91,91 @@ const saveBtn = document.getElementById("save-btn");
 const loadInput = document.getElementById("load-input");
 
 // 💾 SPIELSTAND SPEICHERN
-saveBtn.addEventListener("click", () => {
+saveBtn.addEventListener("click", async () => {
   const gameData = {
     board: Array.from(boxes).map(box => box.innerText),
     turnO: turnO,
     count: count
   };
 
-  const blob = new Blob([JSON.stringify(gameData)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
+  try {
+    // Anfrage an Server, um Signatur zu erstellen
+    const response = await fetch("/sign", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(gameData)
+    });
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "autosave.json";
-  a.click();
+    const result = await response.json();
 
-  URL.revokeObjectURL(url);
+    // Datei mit gameData und Signature speichern
+    const saveData = {
+      gameData: result.gameData,
+      signature: result.signature
+    };
+
+    const blob = new Blob([JSON.stringify(saveData)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "autosave.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+  } catch (err) {
+    console.error("Fehler beim Speichern:", err);
+    alert("Fehler beim Speichern!");
+  }
 });
 
+
 // Spielstand Laden Unsicher
-loadInput.addEventListener("change", (e) => {
+loadInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function (event) {
+  reader.onload = async function (event) {
     try {
       const data = JSON.parse(event.target.result);
 
-      //  Keine Validierung – absichtlich "unsicher"
-      if (!Array.isArray(data.board) || data.board.length !== 9) {
+      // Sicherheits-Check: Daten + Signatur an Server senden
+      const response = await fetch("/validate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const validationResult = await response.json();
+
+      if (!validationResult.valid) {
+        alert("Ungültiger oder manipulierter Spielstand!");
+        return;
+      }
+
+      // Spiel nur laden, wenn Signatur gültig
+      const gameData = data.gameData;
+
+      if (!Array.isArray(gameData.board) || gameData.board.length !== 9) {
         alert("Ungültige Datei.");
         return;
       }
 
       resetGame();
 
-      data.board.forEach((val, i) => {
+      gameData.board.forEach((val, i) => {
         boxes[i].innerText = val;
         boxes[i].disabled = val !== "";
       });
 
-      turnO = data.turnO;
-      count = data.count;
+      turnO = gameData.turnO;
+      count = gameData.count;
 
     } catch (err) {
       alert("Fehler beim Laden: " + err.message);
@@ -141,10 +183,6 @@ loadInput.addEventListener("change", (e) => {
   };
   reader.readAsText(file);
 });
-
-
-
-
 
 newGameBtn.addEventListener("click", resetGame);
 resetBtn.addEventListener("click", resetGame);

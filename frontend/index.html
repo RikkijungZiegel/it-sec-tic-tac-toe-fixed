@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe Game</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="login.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+
+    <!-- AUTH UI -->
+<div id="auth" class="auth-container">
+  <h2 id="auth-title">Login</h2>
+  <input type="text" id="username" placeholder="Benutzername" />
+  <input type="password" id="password" placeholder="Passwort" />
+  
+  <!-- Wiederhole das Passwort nur im Registrierungsmodus -->
+  <input type="password" id="repeat-password" class="hide" placeholder="Passwort wiederholen" />
+
+  <button class="auth-btn" onclick="handleAuth()">Login</button>
+  <p id="toggle-auth" onclick="toggleAuth()">Kein Konto? Registrieren</p>
+  <p id="auth-msg"></p>
+</div>
+
+    <!-- SPIEL -->
+    <div id="game-ui" class="hide">
+      <div class="msg-container hide">
+        <p id="msg">Winner</p>
+        <button id="new-btn">New Game</button>
+      </div>
+      <main>
+        <h1>Tic Tac Toe</h1>
+        <div class="container">
+          <div class="game">
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+          </div>
+        </div>
+        <button id="reset-btn">Reset Game</button>
+      </main>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button id="save-btn">Save Game</button>
+      <input type="file" id="load-input"/>
+    </div>
+
+
+  </body>
+</html>

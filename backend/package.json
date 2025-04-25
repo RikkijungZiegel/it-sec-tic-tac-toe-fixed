@@ -1,0 +1,26 @@
+{
+  "name": "it-sec-tic-tac-toe",
+  "version": "1.0.0",
+  "description": "The **Tic-Tac-Toe Game** is a web-based implementation of the popular two-player game. The project showcases how to create interactive elements, manage game state, and implement simple AI logic. The game is designed to be fully responsive, making it playable on both desktop and mobile devices.",
+  "main": "script.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RikkijungZiegel/it-sec-tic-tac-toe.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RikkijungZiegel/it-sec-tic-tac-toe/issues"
+  },
+  "homepage": "https://github.com/RikkijungZiegel/it-sec-tic-tac-toe#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^2.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {}
+}

@@ -57,4 +57,5 @@ function showMessage(text, color) {
 function showGameUI() {
     document.getElementById("auth").style.display = "none"; 
     document.getElementById("game-ui").style.display = "block";
+    document.getElementById("load-game").style.display = "block";
   }

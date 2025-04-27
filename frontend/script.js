@@ -90,7 +90,7 @@ const checkWinner = () => {
 const saveBtn = document.getElementById("save-btn");
 const loadInput = document.getElementById("load-input");
 
-// 💾 SPIELSTAND SPEICHERN
+// Save game
 saveBtn.addEventListener("click", async () => {
   const gameData = {
     board: Array.from(boxes).map(box => box.innerText),
@@ -110,7 +110,6 @@ saveBtn.addEventListener("click", async () => {
 
     const result = await response.json();
 
-    // Datei mit gameData und Signature speichern
     const saveData = {
       gameData: result.gameData,
       signature: result.signature
@@ -133,7 +132,7 @@ saveBtn.addEventListener("click", async () => {
 });
 
 
-// Spielstand Laden Unsicher
+// Load game
 loadInput.addEventListener("change", async (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -159,7 +158,6 @@ loadInput.addEventListener("change", async (e) => {
         return;
       }
 
-      // Spiel nur laden, wenn Signatur gültig
       const gameData = data.gameData;
 
       if (!Array.isArray(gameData.board) || gameData.board.length !== 9) {
@@ -176,6 +174,12 @@ loadInput.addEventListener("change", async (e) => {
 
       turnO = gameData.turnO;
       count = gameData.count;
+
+      let winnerFound = checkWinner();
+
+      if (count === 9 && !winnerFound) {
+        gameDraw();
+      }
 
     } catch (err) {
       alert("Fehler beim Laden: " + err.message);
